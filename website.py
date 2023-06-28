@@ -2,6 +2,13 @@ import streamlit as st
 import requests
 from streamlit_lottie import st_lottie
 import time
+from google.cloud import firestore
+
+db = firestore.Client()
+collection = db.collection('texts')
+
+
+
 st.set_page_config(page_title="My Recipe Book", page_icon=":tada:", layout="wide")
 success=""
 chef= ("https://assets1.lottiefiles.com/packages/lf20_nfzjxjbh.json")
@@ -35,7 +42,17 @@ st.write  (steps)
 if st.button('Done'):
     with st.spinner('Entering inputs'):
         time.sleep(1)
+    doc_ref = collection.document()
+    doc_ref.set({
+        'text': recipe_name
+    })
     success = st.success("Success!")
+
+# docs = collection.stream()
+
+# for doc in docs:
+#     # Display the data in Streamlit
+#     st.write(f'{doc.id} => {doc.to_dict()}')
 
 if recipe_name  or ingredients or steps:
     success.empty()
